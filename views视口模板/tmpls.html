@@ -1,0 +1,50 @@
+<section class="todoapp">
+			<header class="header">
+				<h1>todos</h1>
+				<input class="new-todo" placeholder="What needs to be done?" autofocus ng-keyup="todoAllApi.addTodo($event,todoAllApi.inputText)" ng-model="todoAllApi.inputText">
+			</header>
+			<!-- This section should be hidden by default and shown when there are todos -->
+			<section class="main">
+				<input class="toggle-all" type="checkbox" ng-click="todoAllApi.checkAllTodo(toggleStatus)" ng-model="toggleStatus">
+				<label for="toggle-all">Mark all as complete</label>
+				<ul class="todo-list">
+					<!-- These are here just to show the structure of the list items -->
+					<!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
+					<!-- <li class="completed">
+						<div class="view">
+							<input class="toggle" type="checkbox" checked>
+							<label>Taste JavaScript</label>
+							<button class="destroy"></button>
+						</div>
+						<input class="edit" value="Create a TodoMVC template">
+					</li> -->
+					<li ng-repeat="todo in todoAllApi.todoList | filter:selector track by $index" ng-class="{completed:todo.isCompleted===true, editing:todoAllApi.currentEditTodoId===todo.id}">
+						<div class="view">
+							<input class="toggle" type="checkbox" ng-model="todo.isCompleted" ng-click="todoAllApi.syncLocalData(todoAllApi.todoList)">
+							<label ng-dblclick="todoAllApi.editTodo(todo)">{{todo.text}}</label>
+							<button class="destroy" ng-click="todoAllApi.deleteTodo(todo)"></button>
+						</div>
+						<input class="edit" value="Rule the web" ng-model="todo.text" ng-keyup="todoAllApi.ensureTodo(todo.text)" ng-keydown="todoAllApi.unsureTodo(todo.text)" setfocus="todo.id===todoAllApi.currentEditTodoId">
+					</li>
+				</ul>
+			</section>
+			<!-- This footer should hidden by default and shown when there are todos -->
+			<footer class="footer">
+				<!-- This should be `0 items left` by default -->
+				<span class="todo-count"><strong>{{todoAllApi.todoList.length}}</strong> item left</span>
+				<!-- Remove this if you don't implement routing -->
+				<ul class="filters">
+					<li>
+						<a ui-sref="home" ng-class="{selected:routeHash==='#!/home'}">All</a>
+					</li>
+					<li>
+						<a ui-sref="active" ng-class="{selected:routeHash==='#!/active'}">Active</a>
+					</li>
+					<li>
+						<a ui-sref="completed" ng-class="{selected:routeHash==='#!/completed'}">Completed</a>
+					</li>
+				</ul>
+				<!-- Hidden if no completed items are left ↓ -->
+				<button class="clear-completed" ng-click="todoAllApi.removeAllCompleted()">Clear completed</button>
+			</footer>
+		</section>
